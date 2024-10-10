@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="adoptApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Pet - Adopt-A-Friend</title>
+    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="homestyles.css">
+</head>
+<body ng-controller="PostPetController">
+    <div class="header">
+        <div class="logo">
+            <img src="logonew.jpg" alt="Logo">
+        </div>
+        <div class="title">
+            <h2>Adopt-A-Friend</h2>
+        </div>
+    </div>
+
+    <br>
+    <div class="post-form">
+        <h2>Post a Pet</h2>
+        <form id="petForm" ng-submit="submitForm()">
+            <input type="file" id="fileInput" accept="image/*" required onchange="previewImage()"><br>
+            <div id="imagePreview" class="image-preview"></div><br>
+            <input type="text" id="petName" ng-model="pet.name" placeholder="Pet Name" required><br>
+            <input type="text" id="petContact" ng-model="pet.contact" placeholder="Contact" required><br>
+            <input type="text" id="petBreed" ng-model="pet.breed" placeholder="Breed" required><br>
+            <input type="number" id="petAge" ng-model="pet.age" placeholder="Age" required min="0" max="50"><br>
+            <select id="petGender" ng-model="pet.gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select><br>
+            <input type="text" id="petPlace" ng-model="pet.place" placeholder="Place" required><br>
+            <select id="petType" ng-model="pet.type" required>
+                <option value="" disabled selected>Select Type</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+            </select><br><br>
+            <button type="submit">Post Pet</button>
+        </form>
+    </div><br>
+
+    <div id="successPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('adoptApp', []);
+
+        app.controller('PostPetController', function($scope, $http) {
+            $scope.pet = {};
+
+            $scope.submitForm = function() {
+                var fileInput = document.getElementById('fileInput').files[0];
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                    $scope.pet.imageUrl = event.target.result;
+
+                    // Post pet data to the server
+                    $http.post('http://localhost:5000/postpet', $scope.pet)
+                        .then(function(response) {
+                            alert('Pet posted successfully!');
+                            document.getElementById('petForm').reset();
+                            document.getElementById('imagePreview').innerHTML = '';
+                        }, function(error) {
+                            console.error('Error response:', error);
+                            alert('Error posting pet: ' + (error.data && error.data.message ? error.data.message : 'Unknown error'));
+                        });
+                };
+
+                if (fileInput) {
+                    reader.readAsDataURL(fileInput);
+                }
+            };
+        });
+
+        function previewImage() {
+            var fileInput = document.getElementById('fileInput');
+            var imagePreview = document.getElementById('imagePreview');
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                imagePreview.innerHTML = '<img src="' + e.target.result + '" alt="Pet Image" class="preview-img">';
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('successPopup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

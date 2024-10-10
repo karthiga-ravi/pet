@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="adoptApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Pet - Adopt-A-Friend</title>
+    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="homestyles.css">
+</head>
+<body ng-controller="PostPetController">
+    <div class="header">
+        <div class="logo">
+            <img src="logonew.jpg" alt="Logo">
+        </div>
+        <div class="title">
+            <h2>Adopt-A-Friend</h2>
+        </div>
+    </div>
+
+    <br>
+    <div class="post-form">
+        <h2>Post a Pet</h2>
+        <form id="petForm">
+            <input type="file" id="fileInput" accept="image/*" required onchange="previewImage()"><br><br>
+            <div id="imagePreview" class="image-preview"></div><br>
+            <input type="text" ng-model="pet.name" placeholder="Pet Name" required><br>
+            <input type="text" ng-model="pet.contact" placeholder="Contact" required><br>
+            <input type="text" ng-model="pet.breed" placeholder="Breed" required><br>
+            <input type="text" ng-model="pet.age" placeholder="Age" required><br>
+            <input type="text" ng-model="pet.gender" placeholder="Gender" required><br>
+            <input type="text" ng-model="pet.place" placeholder="Place" required><br><br>
+            <button type="submit">Post Pet</button>
+        </form>
+    </div><br>
+
+    <div id="successPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <p>Uploaded successfully!</p>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('adoptApp', []);
+
+        app.controller('PostPetController', function($scope) {
+            $scope.pet = {};
+
+            // Function to handle form submission
+            document.getElementById('petForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent actual form submission
+                
+                // Show success popup
+                document.getElementById('successPopup').style.display = 'flex';
+                
+                // Clear the form (optional)
+                document.getElementById('petForm').reset();
+                document.getElementById('fileInput').value = ''; // Clear file input
+                document.getElementById('imagePreview').innerHTML = ''; // Clear image preview
+            });
+        });
+
+        // Function to preview the selected image
+        function previewImage() {
+            var fileInput = document.getElementById('fileInput');
+            var imagePreview = document.getElementById('imagePreview');
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                imagePreview.innerHTML = '<img src="' + e.target.result + '" alt="Pet Image" class="preview-img">';
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById('successPopup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

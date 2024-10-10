@@ -1,0 +1,199 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #d4e3e6;
+    height: 100vh;
+}
+/* header styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0f1b25;
+    padding: 0 20px;
+    height: 90px;
+}
+
+.logo img {
+    border-radius: 50%;
+    height: 70px;
+    width: 70px;
+}
+
+.title {
+    flex: 1;
+    padding-left:20px;
+}
+
+.title h2 {
+    color: white;
+    margin: 0;
+    font-size: 24px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    margin-left: 50px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: gray;
+}
+/* home styles */
+.content {
+    text-align: center;
+    padding: 15px;
+    position: relative;
+    height: calc(100vh - 90px); /* Subtracts the height of the header */
+}
+
+.pets {
+    position: relative;
+    height: 640px;
+    overflow: hidden;
+}
+
+.pets img {
+    width: 100%;
+    height: auto; /* Adjusts height automatically to maintain aspect ratio */
+    border-radius: 5px;
+    opacity: 0.9;
+    display: block; /* Ensures there's no extra space around the image */
+}
+
+.htext {
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    transform: translateY(-50%);
+    color: rgb(2, 2, 29);
+   
+}
+
+.htext h2 {
+    font-size: 48px;
+    margin: 0;
+}
+
+.htext h3 {
+    font-size: 36px;
+    margin: 10px 0;
+}
+
+.htext p {
+    font-size: 20px;
+    color: rgb(250, 255, 254);
+    font-size: 18px;
+}
+/* about us styles */
+.about {
+    display: flex;
+    border-radius: 5px;
+    height: 530px;
+    align-items: center;
+    justify-content: space-around;
+    padding: 50px;
+    background-color: #b8d4e0
+}
+
+.about-text {
+    width: 50%;
+    padding-left: 20px;
+}
+
+.about-text h2 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.about-text p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.about-image {
+    padding-right: 20px;
+    width: 50%;
+}
+
+.about-image img {
+    width: 100%;
+    height: 50%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Contact Footer Styling */
+.contact-footer {
+    background-color: #333; /* Dark background color for the footer */
+    color: white; /* White text color */
+    padding-left: 30px; /* Padding around the content */
+    padding-right: 30px;
+    display: flex; /* Flexbox layout for alignment */
+    justify-content: space-between; /* Space between the two columns */
+    align-items: center; /* Align items vertically in the center */
+    border-radius: 5px;
+    
+}
+
+.contact-footer .contact-info, 
+.contact-footer .social-media {
+    flex: 1; /* Equal flex for both columns */
+    text-align: left; /* Align text to the left */
+}
+
+.contact-footer .social-media {
+    text-align: right; /* Align social media icons to the right */
+}
+
+.contact-footer h3 {
+    margin-bottom: 10px; /* Space below the headings */
+}
+
+.contact-footer p {
+    margin: 5px 0; /* Space between paragraphs */
+}
+
+.contact-footer a {
+    margin-left: 10px; /* Space between social media icons */
+}
+
+.contact-footer img {
+    width: 30px; /* Width of the social media icons */
+    height: 30px; /* Height of the social media icons */
+    margin-left: 10px; /* Margin to the left of each icon */
+}
+
+
+@media (max-width: 768px) {
+    .contact-footer {
+        flex-direction: column; 
+        text-align: center;
+    }
+
+    .contact-footer .contact-info, 
+    .contact-footer .social-media {
+        text-align: center; /* Center-align both columns */
+        margin-bottom: 20px; /* Add margin below each column */
+    }
+
+    .contact-footer img {
+        margin: 0 10px; /* Adjust margin for icons */
+    }
+}

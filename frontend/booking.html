@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="adoptApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Booking Form</title>
+    <link rel="stylesheet" href="adopt.css">
+    <link rel="stylesheet" href="homestyles.css">
+    <style>
+        .header {
+            background-color: #7ea2a5;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .title h2 {
+            margin: 0;
+        }
+
+        .booking-details {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .booking-details h2 {
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+            border: 2px solid #7ea2a5;
+            border-radius: 5px;
+        }
+
+        .submit-button {
+            background-color: #0f1b25;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #9fc1ff;
+        }
+
+        .thank-you-message {
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="BookingController">
+
+    <div class="header">
+        <div class="logo">
+            <img src="logonew.jpg" alt="Logo">
+        </div>
+        <div class="title">
+            <h2>Adopt-A-Friend</h2>
+        </div>
+    </div>
+
+    <div class="booking-details">
+        <h2>Booking Details</h2>
+        
+        <div ng-if="selectedPet">
+            <h3>Selected Pet Details:</h3>
+            <p><strong>Name:</strong> {{selectedPet.name}}</p>
+            <p><strong>Type:</strong> {{selectedPet.type}}</p>
+            <p><strong>Breed:</strong> {{selectedPet.breed}}</p>
+            <p><strong>Age:</strong> {{selectedPet.age}} years</p>
+            <p><strong>Gender:</strong> {{selectedPet.gender}}</p>
+            <p><strong>Place:</strong> {{selectedPet.place}}</p>
+            <p><strong>Contact:</strong> {{selectedPet.contact}}</p>
+        </div>
+
+        <form ng-submit="submitBooking()">
+            <input type="text" ng-model="userName" class="input-field" placeholder="Enter your name" required>
+            <input type="text" ng-model="userContact" class="input-field" placeholder="Enter your contact number" required>
+            <input type="text" ng-model="userAddress" class="input-field" placeholder="Enter your address" required><br>
+            <button type="submit" class="submit-button">Submit Booking</button>
+        </form>
+        <div class="thank-you-message" ng-if="thankYouMessage">{{thankYouMessage}}</div>
+    </div>
+
+    <script>
+        var app = angular.module('adoptApp', []);
+        app.controller('BookingController', function($scope,$http) {
+            // Retrieve the selected pet from localStorage
+            $scope.selectedPet = JSON.parse(localStorage.getItem('selectedPet'));
+
+            // Initialize user input variables
+            $scope.userName = '';
+            $scope.userContact = '';
+            $scope.userAddress = '';
+            $scope.thankYouMessage = '';
+
+            // Submit booking function
+            $scope.submitBooking = function() {
+                if ($scope.userName && $scope.userContact && $scope.userAddress) {
+                    $scope.thankYouMessage = "Thank you, " + $scope.userName + "! Your booking has been submitted successfully.";
+                    const petName = $scope.selectedPet.name;
+                $http.delete('http://localhost:5000/api/pet/deleteByName/' + petName)
+                    .then(function(response) {
+                        console.log('Pet removed from database:', response.data);
+                        // Clear the selected pet from localStorage
+                        localStorage.removeItem('selectedPet');
+                    })
+                    .catch(function(error) {
+                        console.error('Error removing pet:', error);
+                    });
+                } else {
+                    alert("Please fill out all fields.");
+                }
+            };
+        });
+    </script>
+</body>
+</html>

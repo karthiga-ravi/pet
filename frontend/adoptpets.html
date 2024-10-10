@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="adoptApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adopt Pets - Adopt-A-Friend</title>
+    <link rel="stylesheet" href="adopt.css">
+    <link rel="stylesheet" href="homestyles.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #7ea2a5;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            display: flex;
+            border-radius: 10px;
+        }
+
+        .modal-content img {
+            max-width: 200px;
+            border-radius: 15px;
+            margin-right: 20px;
+        }
+
+        .modal-content .details {
+            flex: 1;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button-bar {
+            background-color: #7ea2a5;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .filter-buttons {
+            text-align: center;
+        }
+
+        .filter-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #0f1b25;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .filter-buttons button:hover {
+            background-color: #9fc1ff;
+        }
+
+        .search-bar {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #0f1b25;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        .pet-card {
+            display: inline-block;
+            width: 300px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            vertical-align: top;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .pet-card img {
+            width: 100%;
+            height: 220px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .pet-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .pet-card p {
+            color: #555;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body ng-controller="AdoptPetController">
+    <div class="header">
+        <div class="logo">
+            <img src="logonew.jpg" alt="Logo">
+        </div>
+        <div class="title">
+            <h2>Adopt-A-Friend</h2>
+        </div>
+    </div>
+
+    <div class="button-bar">
+        <div class="filter-buttons">
+            <button ng-click="filterPets('')">All</button>
+            <button ng-click="filterPets('Dog')">Dog</button>
+            <button ng-click="filterPets('Cat')">Cat</button>
+            <button ng-click="filterPets('Bird')">Bird</button>
+            <input type="text" ng-model="searchQuery" placeholder="Search for a pet..." ng-change="searchPets()" class="search-bar">
+        </div>
+    </div>
+
+    <div class="pet-list">
+        <div class="pet-card" ng-repeat="pet in filteredPets | filter: searchQuery" ng-click="openModal(pet)">
+            <img ng-src="{{pet.imageUrl}}" alt="Pet Image" class="pet-image">
+            <h3>{{pet.name}}</h3>
+            <p>Contact: {{pet.contact}}</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal" ng-show="selectedPet">
+        <div class="modal-content">
+            <span class="close" ng-click="closeModal()">&times;</span>
+            <img ng-src="{{selectedPet.imageUrl}}" alt="{{selectedPet.name}}" class="modal-image">
+            <div class="details">
+                <h2>{{selectedPet.name}}</h2>
+                <p><strong>Type:</strong> {{selectedPet.type}}</p>
+                <p><strong>Breed:</strong> {{selectedPet.breed}}</p>
+                <p><strong>Age:</strong> {{selectedPet.age}} years</p>
+                <p><strong>Gender:</strong> {{selectedPet.gender}}</p>
+                <p><strong>Place:</strong> {{selectedPet.place}}</p>
+                <p><strong>Contact:</strong> {{selectedPet.contact}}</p>
+                <button style="height: 45px; width: 70px; background-color: #070d18; color: white;" ng-click="bookPet()">Book</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('adoptApp', []);
+        app.controller('AdoptPetController', function($scope, $http) {
+            $scope.pets = [];
+            $scope.filteredPets = [];
+            $scope.searchQuery = '';
+            $scope.selectedPet = null;
+
+            // Fetch all pets from the server
+            $http.get('http://localhost:5000/pets')
+                .then(function(response) {
+                    $scope.pets = response.data;
+                    $scope.filteredPets = $scope.pets;
+                }, function(error) {
+                    console.error('Error fetching pets:', error);
+                });
+
+            // Filter pets by type
+            $scope.filterPets = function(type) {
+                $scope.filteredPets = $scope.pets.filter(function(pet) {
+                    return type === '' || pet.type === type;
+                });
+            };
+
+            // Search pets based on the search query
+            $scope.searchPets = function() {
+                $scope.filteredPets = $scope.pets.filter(function(pet) {
+                    return pet.name.toLowerCase().includes($scope.searchQuery.toLowerCase()) ||
+                           pet.breed.toLowerCase().includes($scope.searchQuery.toLowerCase()) ||
+                           pet.place.toLowerCase().includes($scope.searchQuery.toLowerCase());
+                });
+            };
+
+            // Open the modal
+            $scope.openModal = function(pet) {
+                $scope.selectedPet = pet;
+                document.getElementById('myModal').style.display = "block";
+            };
+
+            // Close the modal
+            $scope.closeModal = function() {
+                $scope.selectedPet = null;
+                document.getElementById('myModal').style.display = "none";
+            };
+
+            // Close modal when clicking outside of it
+            window.onclick = function(event) {
+                if (event.target === document.getElementById('myModal')) {
+                    $scope.$apply($scope.closeModal);
+                }
+            };
+
+            $scope.bookPet = function() {
+                // Save selected pet to localStorage
+                localStorage.setItem('selectedPet', JSON.stringify($scope.selectedPet));
+                // Navigate to booking page
+                window.location.href = "booking.html"; // Adjust the URL based on your new booking page
+            };
+        });
+    </script>
+</body>
+</html>

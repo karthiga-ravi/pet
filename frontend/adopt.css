@@ -1,0 +1,162 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4b8f8c; /* Header background color */
+    padding: 20px;
+    color: white;
+}
+
+.logo img {
+    height: 50px; /* Adjust logo size */
+}
+
+.title h2 {
+    margin: 0;
+}
+
+/* Filter Options Styles */
+.filter-options {
+    text-align: center; /* Center align the buttons and search bar */
+    margin: 20px 0; /* Space above and below the filter options */
+}
+
+.filter-options button {
+    background-color: #7ea2a5; /* Button background color */
+    color: white; /* Button text color */
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px; /* Space between buttons */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-options button:hover {
+    background-color: #4b8f8c; /* Change color on hover */
+}
+
+.search-bar {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #0f1b25; /* Border color */
+    border-radius: 5px;
+    width: 200px; /* Fixed width for search bar */
+    margin-top: 10px; /* Space above search bar */
+}
+
+/* Pet List Styles */
+.pet-list {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of pet cards */
+    justify-content: center; /* Center the pet cards */
+    margin: 20px; /* Margin around the pet list */
+}
+
+.pet-card {
+    background-color: white; /* Card background color */
+    border: 1px solid #ddd; /* Card border */
+    border-radius: 10px; /* Rounded corners */
+    margin: 10px; /* Space around each card */
+    padding: 10px; /* Space inside the card */
+    width: 200px; /* Fixed width for pet cards */
+    text-align: center; /* Center text in cards */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for card */
+    transition: transform 0.2s; /* Animation for hover effect */
+}
+
+.pet-card:hover {
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+.pet-image {
+    width: 100%; /* Image takes full width of card */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners for images */
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #7ea2a5;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 800px; /* Max width for modal */
+    display: flex; /* Flexbox for layout */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.modal-content img {
+    max-width: 360px; /* Max width for images in modal */
+    border-radius: 15px; /* Rounded corners for images */
+    margin-right: 20px; /* Space between image and text */
+    padding-left: 20px; /* Space on left */
+}
+
+.modal-content .details {
+    flex: 1; /* Allow text to take up remaining space */
+}
+
+.close {
+    color: #aaa; /* Close button color */
+    float: right; /* Float to the right */
+    font-size: 28px; /* Close button size */
+    font-weight: bold; /* Bold text */
+}
+
+.close:hover,
+.close:focus {
+    color: black; /* Change color on hover */
+    text-decoration: none;
+    cursor: pointer; /* Pointer cursor */
+}
+
+/* Footer Styles */
+.footer {
+    text-align: center; /* Center align footer text */
+    background-color: #4b8f8c; /* Footer background color */
+    color: white; /* Footer text color */
+    padding: 20px; /* Padding for footer */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .pet-card {
+        width: 90%; /* Full width on smaller screens */
+    }
+    
+    .modal-content {
+        flex-direction: column; /* Stack image and details on small screens */
+    }
+
+    .modal-content img {
+        max-width: 100%; /* Full width for images */
+        margin: 0 auto 20px auto; /* Center image with margin below */
+    }
+}
